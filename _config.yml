@@ -1,15 +1,14 @@
 # Site settings
 title: Emerald | A simple Jekyll blog
 description: "A minimal blog template, build with Jekyll."
-url: "http://dougbarrett.nz/blog"
+url: "http://www.dougbarrett.nz/blog"
 author:
-  name: "Jacopo Rabolini"
-  email: "hello@jacoporabolini.com"
-  url: "http://www.jacoporabolini.com"
+  name: "Doug Barrett"
+  url: "http://www.dougbarrett.nz/"
 
 # Build settings
 baseurl: "/blog"
-production_url : http://dougbarrett.nz/blog
+production_url : "http://www.dougbarrett.nz/blog"
 markdown: kramdown
 source: .
 destination: ./_site
