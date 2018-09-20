@@ -18,8 +18,8 @@ html, body, h1, h2, h3, h4, h5, h6, p, ul, ol, li, img {
 
 /*- Base color -*/
 
-$main-color: #008A3C;
-$background-color: #FDFDFD;
+$main-color: #5994f2;
+$background-color: #fefff6;
 $text-color: #222222;
 
 /*- Base settings -*/
@@ -42,6 +42,6 @@ a {
 	font-weight: 700;
 	&:hover,
 	&:focus {
-		color: darken($main-color, 5%);
+		color: darken($main-color, 10%);
 	}
 }
