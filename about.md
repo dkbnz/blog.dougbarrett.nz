@@ -1,21 +1,13 @@
 ---
 layout: page
-title: About Emerald
+title: What is this?
 ---
 ## About
-Emerald is a minimal theme created for Jekyll. The main purpose of Emerald is to provide a clear theme for those who want a blog ready to use, focused on the content and mobile-first.
 
-For further details on Emerald, please visit the [repository on Github](https://github.com/KingFelix/emerald/).
 
-![Emerald](img/Emerald01.png "Emerald")
 
-### Setup
-Emerald may be installed by simply downloading the .zip folder from the [repository on Github](https://github.com/KingFelix/emerald/archive/master.zip).
+I have come to the realisation that the ability to convey an idea is just as important as the idea itself. What good is a thought if you can't communicate it? Not just between yourself and others, but also your current self and your future self.
 
-After extracting the content from the folder into the selected directory, you can type ``jekyll serve`` from the terminal, than open your browser to ``0.0.0.0:4000/emerald/`` and you will find it there.
+Honestly, I'm not much of a writer. I'd like to be good at it. I want to enjoy it. It's just that I haven't done enough writing to even evaluate where it sits on my interest meter. The majority of my life has been spent trying to think of and implement ideas, without much thought given as to how to effectively document them. This is the motivation behind creating this blog. Increasing the ability to document ideas requires improving writing and improving writing requires practice.
 
-Additionally it is possible to fork the repository and use Github Pages as hosting. By following this way it will be enough to change the ``baseurl`` value into the ``_config.yml`` file, with the directory name of your project (for example /blog) or simply with a "/" (slash) if you want install Emerald in the root.
-
-Last but not least: the [Jekyll documentation](http://jekyllrb.com) is the best starting point!
-
-Enjoy!
+So, what is this place? There's no set label yet. It's a mix between a programming portfolio, personal blog and a record of my various projects. The target audience primarily being friends, family, potential employers and strangers on the internet. Now, you may realise that this list covers almost anyone who may stumble upon this site so let me narrow the scope a little. As a developer, the amount of time I have spent scouring the internet looking for solutions to niche problems is incalculable. Often, the saving grace is found in some obscure blog post from 10+ years ago. This is my way of giving back. It isn't just any stranger on the internet that this blog is for, but strangers looking for solutions. I hope my posts can help at least one person.
