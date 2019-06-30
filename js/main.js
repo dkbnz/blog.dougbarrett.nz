@@ -1,25 +1,16 @@
-var normal = document.getElementById("nav-menu");
-var reverse = document.getElementById("nav-menu-left");
-
-var icon = normal !== null ? normal : reverse;
+var emailIcon = document.getElementById("email-icon");
+var menuIcon = document.getElementById("nav-menu");
 
 // Toggle the "menu-open" % "menu-opn-left" classes
 function toggle() {
-	  var navRight = document.getElementById("nav");
-	  var navLeft = document.getElementById("nav-left");
-	  var nav = navRight !== null ? navRight : navLeft;
-
+	  var nav = document.getElementById("nav");
 	  var button = document.getElementById("menu");
 	  var site = document.getElementById("wrap");
 
-	  if (nav.className == "menu-open" || nav.className == "menu-open-left") {
+	  if (nav.className == "menu-open") {
 	  	  nav.className = "";
 	  	  button.className = "";
 	  	  site.className = "";
-	  } else if (reverse !== null) {
-	  	  nav.className += "menu-open-left";
-	  	  button.className += "btn-close";
-	  	  site.className += "fixed";
 	  } else {
 	  	  nav.className += "menu-open";
 	  	  button.className += "btn-close";
@@ -28,11 +19,11 @@ function toggle() {
 	}
 
 // Ensures backward compatibility with IE old versions
-function menuClick() {
-	if (document.addEventListener && icon !== null) {
-		icon.addEventListener('click', toggle);
-	} else if (document.attachEvent && icon !== null) {
-		icon.attachEvent('onclick', toggle);
+function addMenuClick() {
+	if (document.addEventListener && menuIcon !== null) {
+		menuIcon.addEventListener('click', toggle);
+	} else if (document.attachEvent && menuIcon !== null) {
+		menuIcon.attachEvent('onclick', toggle);
 	} else {
 		return;
 	}
@@ -41,20 +32,19 @@ function menuClick() {
 // Sorry about this, this is creates and opens a mailto link of my email address
 function iHateSpam() {
 	var link = window.atob('bW9jLmxpYW10b2hAdHRlcnJhYi5rZDpvdGxpYW0=');
-	window.open(link.split("").reverse().join(""));
+	emailIcon.href = link.split("").reverse().join("");
 }
 
 // Ensures backward compatibility with IE old versions
-function addEmailEvent() {
-	var emailIcon = document.getElementById("email_icon")
+function addEmailHover() {
 	if (document.addEventListener && emailIcon !== null) {
-		emailIcon.addEventListener('click', iHateSpam);
+		emailIcon.addEventListener('mouseover', iHateSpam);
 	} else if (document.attachEvent && emailIcon !== null) {
-		emailIcon.attachEvent('onclick', iHateSpam);
+		emailIcon.attachEvent('onmouseover', iHateSpam);
 	} else {
 		return;
 	}
 }
 
-menuClick();
-addEmailEvent();
+addMenuClick();
+addEmailHover();
