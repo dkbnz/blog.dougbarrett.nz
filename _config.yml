@@ -12,7 +12,7 @@ production_url : "http://www.dougbarrett.nz/blog"
 markdown: kramdown
 source: .
 destination: ./_site
-permalink: /:title
+permalink: /:categories/:year/:month/:day/:title
 
 ############################################################
 # Site configuration for the Jekyll 3 Pagination Gem
