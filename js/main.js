@@ -1,7 +1,7 @@
 var emailIcon = document.getElementById("email-icon");
 var menuIcon = document.getElementById("nav-menu");
 
-// Toggle the "menu-open" % "menu-opn-left" classes
+// Toggle the "menu-open" classes
 function toggle() {
 	  var nav = document.getElementById("nav");
 	  var button = document.getElementById("menu");
