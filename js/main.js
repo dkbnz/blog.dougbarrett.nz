@@ -11,7 +11,7 @@ function toggle() {
 
 	  var button = document.getElementById("menu");
 	  var site = document.getElementById("wrap");
-	  
+
 	  if (nav.className == "menu-open" || nav.className == "menu-open-left") {
 	  	  nav.className = "";
 	  	  button.className = "";
@@ -38,4 +38,23 @@ function menuClick() {
 	}
 }
 
+// Sorry about this, this is creates and opens a mailto link of my email address
+function iHateSpam() {
+	var link = window.atob('bW9jLmxpYW10b2hAdHRlcnJhYi5rZDpvdGxpYW0=');
+	window.open(link.split("").reverse().join(""));
+}
+
+// Ensures backward compatibility with IE old versions
+function addEmailEvent() {
+	var emailIcon = document.getElementById("email_icon")
+	if (document.addEventListener && emailIcon !== null) {
+		emailIcon.addEventListener('click', iHateSpam);
+	} else if (document.attachEvent && emailIcon !== null) {
+		emailIcon.attachEvent('onclick', iHateSpam);
+	} else {
+		return;
+	}
+}
+
 menuClick();
+addEmailEvent();
