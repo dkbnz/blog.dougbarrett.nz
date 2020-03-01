@@ -1,10 +1,11 @@
 # Site settings
 title: Doug's Blog
-description: "A minimal blog template, build with Jekyll."
+description: "A minimal blog, build with Jekyll."
 url: "http://www.dougbarrett.nz/blog"
 author:
   name: "Doug Barrett"
   url: "http://www.dougbarrett.nz/"
+categories: [projects, travel]
 
 # Build settings
 baseurl: "/blog"
