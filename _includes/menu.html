@@ -3,6 +3,11 @@
 		<a href="{{ site.baseurl }}">Home</a>
 
 		<!-- Nav pages -->
+		{% for category in site.categories %}
+			<a href="{% if site.baseurl == "/" %}{{ category[0] }}{% else %}{{ category[0] | prepend: '/' | prepend: site.baseurl }}{% endif %}" title="{{ category[0] }}">{{ category[0] | capitalize }}</a>
+		{% endfor %}
+
+		<!-- Nav pages -->
 	  {% for page in site.pages %}
 	    {% if page.layout == "page" %}
 	      <a href="{% if site.baseurl == "/" %}{{ page.url }}{% else %}{{ page.url | prepend: site.baseurl }}{% endif %}" title="{{ page.title }}">{{ page.title }}</a>
