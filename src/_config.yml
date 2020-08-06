@@ -1,15 +1,15 @@
 # Site settings
 title: Doug's Blog
 description: "A minimal blog, build with Jekyll."
-url: "http://www.dougbarrett.nz/blog"
+url: "https://blog.dougbarrett.nz/"
 author:
   name: "Doug Barrett"
-  url: "http://www.dougbarrett.nz/"
+  url: "https://www.dougbarrett.nz/"
 categories: [projects, travel]
 
 # Build settings
-baseurl: "/blog"
-production_url : "http://www.dougbarrett.nz/blog"
+baseurl: "/"
+production_url : "https://blog.dougbarrett.nz/"
 markdown: kramdown
 source: .
 destination: ./_site
