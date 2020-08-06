@@ -4,7 +4,7 @@ description: "A minimal blog, build with Jekyll."
 url: "https://blog.dougbarrett.nz/"
 author:
   name: "Doug Barrett"
-  url: "https://www.dougbarrett.nz/"
+  url: "https://dougbarrett.nz/"
 categories: [projects, travel]
 
 # Build settings
