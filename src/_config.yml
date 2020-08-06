@@ -9,7 +9,6 @@ categories: [projects, travel]
 
 # Build settings
 baseurl: "/"
-production_url : "https://blog.dougbarrett.nz/"
 markdown: kramdown
 source: .
 destination: ./_site
