@@ -1,9 +1,9 @@
-name: Build and deploy site.
+name: Deployment
 
 on:
   push:
     branches:
-      - master
+            - master
 
 jobs:
   jekyll:
