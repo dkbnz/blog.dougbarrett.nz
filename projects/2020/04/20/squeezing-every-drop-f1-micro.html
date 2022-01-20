@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<!-- Meta -->
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+	<meta name="generator" content="Jekyll">
+
+	<title>Squeezing every last drop out of a free Google compute instance.</title>
+
+	<!-- Favicon links -->
+	<link rel="apple-touch-icon" sizes="180x180" href="https://dougbarrett.nz/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="https://dougbarrett.nz/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="https://dougbarrett.nz/favicon-16x16.png">
+	<link rel="manifest" href="https://dougbarrett.nz/site.webmanifest">
+	<link rel="mask-icon" href="https://dougbarrett.nz/safari-pinned-tab.svg" color="#5bbad5">
+	<meta name="msapplication-TileColor" content="#da532c">
+	<meta name="theme-color" content="#ffffff">
+
+	<!-- CSS & fonts -->
+	<link rel="stylesheet" href="/css/main.css">
+	<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,900,400italic%7CSignika:700,300,400,600' rel='stylesheet' type='text/css'>
+
+	<!-- RSS -->
+	<link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" />
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-125752516-1"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'UA-125752516-1');
+	</script>
+
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css" />
+	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css" />
+	<script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js" data-cfasync="false"></script>
+	<script>
+	window.cookieconsent.initialise({
+	  "palette": {
+	    "popup": {
+	      "background": "#edeff5",
+	      "text": "#838391"
+	    },
+	    "button": {
+	      "background": "#4b81e8"
+	    }
+	  },
+	  "theme": "edgeless",
+	  "content": {
+	    "message": "Cookies are used to analyze the traffic on this site.",
+	    "href": "https://policies.google.com/technologies/cookies"
+	  },
+	  "cookie": {
+	    "domain": "dougbarrett.nz"
+	  }
+	});
+	</script>
+
+</head>
+
+
+<body onload="document.body.style.opacity='1'">
+	<div id="wrap">
+
+	  	<!-- Navigation -->
+	  	<nav id="nav">
+	<div id="nav-list">
+		<a href="/">Home</a>
+
+		<!-- Nav pages -->
+		
+			<a href="projects" title="projects">Projects</a>
+		
+
+		<!-- Nav pages -->
+	  
+	    
+	  
+	    
+	      <a href="/about" title="What is this?">What is this?</a>
+	    
+	  
+	    
+	  
+	    
+	  
+	    
+	  
+	    
+	  
+	    
+	  
+
+    <!-- Nav links -->
+	  
+
+	</div>
+
+  <!-- Nav footer -->
+	<footer>
+
+	<!-- Nav footer content -->
+
+</footer>
+
+
+</nav>
+
+
+    <!-- Icon menu -->
+	  <a id="nav-menu">
+	  	<div id="menu"></div>
+	  </a>
+
+      <!-- Header -->
+      <header id="header">
+	<a href="/">
+		<img src="/img/lineart_profile.png" alt="Curious Doug Logo">
+	</a>
+</header>
+
+
+    <!-- Main content -->
+	  <div id="container">
+
+		<main>
+
+			<article id="post-page">
+	<h2>Squeezing every last drop out of a free Google compute instance.</h2>		
+	<time datetime="2020-04-20T00:00:00+00:00" class="by-line">20 Apr 2020</time>
+	<div class="content">
+
+		<p>TL;DR</p>
+<ul>
+  <li>Ran out of RAM on an f1-micro instance</li>
+  <li>Decreased application and database RAM Usage</li>
+  <li>Implemented a swapfile</li>
+</ul>
+
+<p>A few months ago, I started a small project to experiment with VueJs and Spring Boot and decided to host a demo version of it. I didn’t want to spend money on hosting, yet the project needed more flexibility than what a standard free webhost would provide. This prompted me to find free a VPS/VM instance. I eventually landed on the <a href="https://cloud.google.com/free">GCP Free Tier</a> page.</p>
+
+<p>Google offers a variety of it’s cloud platform services absolutely <em>free</em>.
+They aren’t the only cloud provider doing this, almost every major PaaS provider has a handful of it’s services free. Their intention is to tie you to their ecosystem, so that after the trial ends - or when you run out of the free resource, you pay for more resource.</p>
+
+<p>I started hosting my project, <a href="https://github.com/dkbarrett/Qlive/">Qlive</a>, on the f1-micro instance they provide free of charge. The specs weren’t anything to weren’t anything to write home about.</p>
+<ul>
+  <li>1 x shared vCPU (0.2 of a vCPU, up to 1 vCPU available for short periods of bursting)</li>
+  <li>600MB RAM</li>
+  <li>5GB of snapshot storage</li>
+  <li>30GB of HDD persistent disk</li>
+</ul>
+
+<p>Initially, the app was packaged as a plain old jar file using an embedded H2 database for storage. The operating system on the VM was Debian. This ran fine for a couple of months until I decided to automate deployment.</p>
+
+<p>The OS was changed from Debian to Google’s Container-Optimized OS. I dockerized the application, spun up a private docker registry on the instance and created a compose file for Qlive. The compose file used <a href="https://github.com/containrrr/watchtower">watchtower</a> to monitor the registry and pull the latest version whenever the application was updated. By using GitHub actions (and a workflow file), the application was automatically built, containerized and pushed to the registry after any commit to master. This worked exactly as expected (eventually).</p>
+
+<p>Anyone who has worked with docker knows that containers are supposed to be ephemeral. As I mentioned before, the data was stored in an embedded H2 database. Upon every new pull of the image, the database would be wiped. I could have linked a volume to maintain the data between images but that seemed like a temporary solution. Simply put, this was not scalable, and although I don’t expect it to take off (it’s not exactly revolutionary) part of my intention behind creating it was to practice creating applications that can scale. The decision was made to fetch application data from a MySQL database.</p>
+
+<h3 id="problem">Problem</h3>
+<p>With the database up and running, it only took a handful of requests before the application would grind to a halt and start killing processes at an attempt to free up memory.</p>
+
+<p>A quick analysis of the memory use of each container revealed what I suspected.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@host ~ <span class="nv">$ </span>docker stats
+NAME              CPU %    MEM USAGE / LIMIT     MEM %
+qlive             0.10%    189.4MiB / 583.8MiB   32.44%
+watchtower        0.00%    4.672MiB / 583.8MiB   0.80%
+qlive_db          0.04%    180.23MiB / 583.8MiB  30.87%
+docker-registry   0.00%    7.734MiB / 583.8MiB   1.32%
+nginx-proxy-le    0.10%    5.137MiB / 583.8MiB   0.88%
+nginx-proxy-gen   0.09%    2.598MiB / 583.8MiB   0.44%
+nginx-proxy       0.00%    3.25MiB / 583.8MiB    0.56%
+</code></pre></div></div>
+
+<p>The total used RAM from the containers was ~390 MiB at idle. Once the system overhead was included (incl. docker and ssh daemon), it was easily hitting the limit and resulted in killed processes.</p>
+
+<p>Something had to give.</p>
+
+<h3 id="thought-process">Thought Process</h3>
+
+<p>This is the point where someone who is not as resourceful (read: cheap) as I am would fork out for an upgrade. However, as it is something that I don’t expect to recieve much traffic, this was not an option for me. These were the few solutions that I initially thought of.</p>
+<ul>
+  <li><strong>Add support to the application for Google <a href="https://cloud.google.com/firestore">firestore</a></strong></li>
+</ul>
+
+<p>Also apart of their free tier, Google offers 1 GB of storage on their NoSQL database product, firestore.
+This permits 50,000 reads, 20,000 writes, 20,000 deletes per day.</p>
+
+<p>This was likely the most time intensive process, and had I have known that the VM was going to run out of memory <em>before</em> I added MySQL support, this would have been my chosen solution. However, I felt that implementing firestore support was more effort than what it’s worth, especially when considering other options.</p>
+
+<ul>
+  <li><strong>Host the MySQL database externally, using another cloud provider, on another free instance.</strong></li>
+</ul>
+
+<p>As I said before, many cloud providers have free trials. This was one that I was leaning heavily toward, but I wanted to try keep it all in a single VM for now. Which would allow me to use the other trials for other projects.</p>
+
+<ul>
+  <li><strong>Decrease the memory that the application and database uses</strong></li>
+</ul>
+
+<p>This was what I decided to go with. I figured that even if I don’t save enough memory to make a difference, I would learn some transferrable skills in the process.</p>
+
+<h3 id="solution">Solution</h3>
+
+<p>As we can see above, the application and the database use far more than the registry, proxy and watchtower.</p>
+
+<p>MySQL was given a custom configuration.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="pi">[</span><span class="nv">mysqld</span><span class="pi">]</span>
+<span class="s">query_cache_size=0</span>
+<span class="s">max_connections=10</span>
+<span class="s">key_buffer_size=8</span>
+<span class="s">thread_cache_size=0</span>
+<span class="s">host_cache_size=0</span>
+
+<span class="c1"># Per thread or per operation settings</span>
+<span class="s">thread_stack=131072</span>
+<span class="s">sort_buffer_size=32K</span>
+<span class="s">read_buffer_size=8200</span>
+<span class="s">read_rnd_buffer_size=8200</span>
+<span class="s">max_heap_table_size=16K</span>
+<span class="s">tmp_table_size=1K</span>
+<span class="s">bulk_insert_buffer_size=0</span>
+<span class="s">join_buffer_size=128</span>
+<span class="s">net_buffer_length=1K</span>
+
+<span class="s">table_definition_cache=400</span>
+<span class="s">performance_schema=0</span>
+</code></pre></div></div>
+
+<p>Some JVM options were added to the entrypoint for the Qlive container.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">-XX:+UseSerialGC</code> Perform garbage collection inline with the thread allocating the heap memory instead of a dedicated GC thread(s)</li>
+  <li><code class="language-plaintext highlighter-rouge">-Xss512k</code> Limit each threads stack memory to 512KB (default 1MB)</li>
+  <li><code class="language-plaintext highlighter-rouge">XX:MaxRAM=100m</code> Restrict the JVM’s calculations for the heap and non heap managed memory to be within the limits of this value.</li>
+</ul>
+
+<p>MySQL configuration modifications resulted in a decrease of ~130MiB. Qlive seen a much smaller decrease of ~30MiB.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user@host ~ <span class="nv">$ </span>docker stats
+NAME              CPU %    MEM USAGE / LIMIT     MEM %
+qlive             0.18%    160.7MiB / 583.8MiB   27.52%
+watchtower        0.81%    5.09MiB / 583.8MiB    0.87%
+qlive_db          0.06%    43.99MiB / 583.8MiB   7.54%
+docker-registry   0.01%    7.777MiB / 583.8MiB   1.33%
+nginx-proxy-le    0.09%    6.828MiB / 583.8MiB   1.17%
+nginx-proxy-gen   0.12%    6.148MiB / 583.8MiB   1.05%
+nginx-proxy       0.00%    3.238MiB / 583.8MiB   0.55%
+</code></pre></div></div>
+
+<p>These savings allowed for everything to get up and running in the mean time but I have a few features in mind that would result in memory issues as soon as they were implemented. <em>I needed more memory.</em></p>
+
+<p>Looking at the total memory use using <code class="language-plaintext highlighter-rouge">free -m</code> revealed something I should have thought of earlier: <em>there was no swap</em>.
+I added the following few lines of code to the startup script of my VM which gave me a 1GB swapfile. This alleviated all memory issues immediately.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#! /bin/bash</span>
+sysctl vm.disk_based_swap<span class="o">=</span>1 <span class="c"># Allow swapfiles on the vm</span>
+fallocate <span class="nt">-l</span> 1G /var/swapfile <span class="c"># Create the swapfile</span>
+<span class="nb">chmod </span>600 /var/swapfile <span class="c"># Only add read/write permissions</span>
+mkswap /var/swapfile <span class="c"># Prepare file to be used as swap partition</span>
+swapon /var/swapfile <span class="c"># Enable swap</span>
+sysctl vm.swappiness<span class="o">=</span>20 <span class="c"># Allocate 20% of memory to the swapfile, unless absolutely necessary</span>
+</code></pre></div></div>
+
+<p>Obviously this is not the most elegant solution, especially considering the swapfile is on a standard HDD. However, it prevents the machine from grinding to a halt and buys a little time to implement something more permanent. Qlive lives to see another day.</p>
+
+		
+	</div>
+</article>
+
+
+
+			<!-- Posts -->
+			<ul id="posts">
+
+				
+
+			</ul>
+
+	  </main>
+
+		  <!-- Pagination links -->
+
+      
+
+	  </div>
+
+	    <!-- Footer -->
+	    <footer>
+  <ul class="icons">
+		<li><a href="https://www.linkedin.com/in/dkbarrett" target="_blank"><i class="fab fa-linkedin fa-2x" title="LinkedIn"></i></a></li>
+		<li><a href="https://github.com/dkbarrett" target="_blank"><i class="fab fa-github fa-2x" title="GitHub"></i></a></li>
+		<li><a href="#" id="email-icon"><i class="fas fa-envelope fa-2x" title="Email"></i></a></li>
+	</ul>
+</footer>
+
+
+	    <!-- Script -->
+      <script src="/js/main.js"></script>	
+
+
+	</div>
+</body>
+</html>
